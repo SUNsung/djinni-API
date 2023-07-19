@@ -15,7 +15,7 @@ if(!$DJ->is_auth()){
     if (!$rez) sys::print(code: 401, title: "Unauthorized");
 }
 
-sys::print($DJ);
+sys::print($DJ->load_inbox());
 
 //Финальная заглушка
 sys::print(code: 400, title: "Bad Request [global]", msg: "Rout not catch");
