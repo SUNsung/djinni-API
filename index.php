@@ -15,7 +15,6 @@ if(!$DJ->is_auth()){
     if (!$rez) sys::print(code: 401, title: "Unauthorized");
 }
 
-
 sys::print($DJ);
 
 //Финальная заглушка
