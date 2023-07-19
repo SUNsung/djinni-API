@@ -1,4 +1,6 @@
 # Class for working with djinni.co
+### PHP8.2+ is required to work
+`No third party libraries needed, only php`
 
 Since the djinni.co resource does not have an API, a class was written to work with the resource from the server, in a developer-friendly format.
 
