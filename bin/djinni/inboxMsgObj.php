@@ -6,6 +6,7 @@ class inboxMsgObj{
     public int $id;
     public string $name;
     public string $msg;
+    public string $date;
     public string|bool $comments;
     public string $recruiter;
     public inboxMsgObj_company $company;

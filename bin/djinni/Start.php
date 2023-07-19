@@ -82,14 +82,12 @@ class Start extends net{
     public function load_inbox(bool $is_archive=false):array{
         $ret = [];
 
-        $buf = $this->send_req("https://djinni.co/my/inbox/");
+        //получение страницы
+        $buf = $this->send_req("https://djinni.co/my/inbox/".($is_archive? "archive/":""));
         if($buf->code !== 200) return $ret;
 
-        $buf = $this->parse_inbox_msg($buf->body);
-
-        \sys::print($buf);
-
-        return $ret;
+        //Парсинг контента из страницы и отдача
+        return $this->parse_inbox_msg($buf->body);
     }
 
 //#############################################################################//
