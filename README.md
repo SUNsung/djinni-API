@@ -28,3 +28,26 @@ $arr = [
 
 sys::print($arr);
 ```
+
+
+
+
+
+#### Message object example
+```json
+{
+  "id": 15483452,
+  "name": "PHP Backend Developer",
+  "msg": "Ви відкрили контакти роботодавцю.",
+  "date": "18 липня 2023 р.",
+  "comments": false,
+  "recruiter": "Tatiana Zalvovska, Senior Technical Recruiter",
+  "company": {
+    "id": 23599,
+    "name": "Beliani",
+    "img": "https://p.djinni.co/05/ee7b05b7a7966223a16a942b37cef1/1677054671213_400.jpg",
+    "url": "https://djinni.co/jobs/?company=beliani-com-837ef",
+    "is_top": false
+  }
+}
+```
