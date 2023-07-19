@@ -17,7 +17,7 @@ if(!$DJ->is_auth()){
 
 $arr = [
     "archive" => $DJ->load_inbox(is_archive: true),  //получение сообщений из архива
-    "inbox" => $DJ->load_inbox()   //ПОлучение сообщений из почтового яшика
+    "inbox" => $DJ->load_inbox()   //ПОлучение сообщений из почтового ящика
 ];
 
 sys::print($arr);
