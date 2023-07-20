@@ -143,69 +143,24 @@ class parse{
         //Отсечение если сломался парсер верстки
         if(count($buf_arr) !== 9) \sys::print(code: 500, title: "Failed to get search parameters");
 
+        //Массив связности парсера
+        $key_arr = [
+            ["specialization", "primary_keyword"],
+            ["country", "region"],
+            ["city", "location"],
+            ["experience", "exp_level"],
+            ["employment", "employment"],
+            ["companyType", "company_type"],
+            ["salaryFrom", "salary"],
+            ["english", "english_level"],
+            ["others", "editorial"]
+        ];
+
         //Перебор буфера для получения фактических обьектов
         foreach ($buf_arr as $pos=>$bom){
-            switch ($pos){
-
-                //specialization
-                case 0:
-                    $ret->specialization->name = $bom["name"];
-                    $ret->specialization->values = $this->___get_paramsArr("primary_keyword", $bom["html"]);
-                    break;
-
-                //country
-                case 1:
-                    $ret->country->name = $bom["name"];
-                    $ret->country->values = $this->___get_paramsArr("region", $bom["html"]);
-                    break;
-
-                //city
-                case 2:
-                    $ret->city->name = $bom["name"];
-                    $ret->city->values = $this->___get_paramsArr("location", $bom["html"]);
-                    break;
-
-                //experience
-                case 3:
-                    $ret->experience->name = $bom["name"];
-                    $ret->experience->values = $this->___get_paramsArr("exp_level", $bom["html"]);
-                    break;
-
-                //employment
-                case 4:
-                    $ret->employment->name = $bom["name"];
-                    $ret->employment->values = $this->___get_paramsArr("employment", $bom["html"]);
-                    break;
-
-                //company_type
-                case 5:
-                    $ret->companyType->name = $bom["name"];
-                    $ret->companyType->values = $this->___get_paramsArr("company_type", $bom["html"]);
-                    break;
-
-                //salary
-                case 6:
-                    $ret->salaryFrom->name = $bom["name"];
-                    $ret->salaryFrom->values = $this->___get_paramsArr("salary", $bom["html"]);
-                    break;
-
-                //english_level
-                case 7:
-                    $ret->english->name = $bom["name"];
-                    $ret->english->values = $this->___get_paramsArr("english_level", $bom["html"]);
-                    break;
-
-                //editorial
-                case 8:
-                    $ret->others->name = $bom["name"];
-                    $ret->others->values = $this->___get_paramsArr("editorial", $bom["html"]);
-                    break;
-
-            }
+            $ret->{$key_arr[$pos][0]}->name = $bom["name"];
+            $ret->{$key_arr[$pos][0]}->values = $this->___get_paramsArr($key_arr[$pos][1], $bom["html"]);
         }
-
-        \sys::print($ret);
-
 
         return $ret;
     }

@@ -91,12 +91,11 @@ class Start extends net{
     }
 
     /** Получение массива ключей для поиска */
-    public function load_jobsFilter():object{
-        $ret = (object)[];
+    public function load_jobsFilter():filterObj|bool{
 
         //получение страницы
         $buf = $this->send_req("https://djinni.co/jobs/");
-        if($buf->code !== 200) return $ret;
+        if($buf->code !== 200) return false;
 
         //Парсинг контента из страницы и отдача
         return $this->parse_jobs_filter($buf->body);
