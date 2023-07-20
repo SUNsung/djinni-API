@@ -24,7 +24,7 @@ $search->add_employment("remote");
 sys::print($DJ->load_search(), "Search");
 
 
-$DJ->start_search(pages: 2)->add_specialization("PHP");   //Установка параметров для поиска вакансий
+$DJ->start_search(pages: 2)->add_specialization("PHP"); //Установка параметров для поиска вакансий
 $arr = [
     "profileView" => $DJ->load_profileView(),           //Список пользователей что просматривали профиль за последний месяц
     "jobsFilter" => $DJ->load_jobsFilter(),             //Обьект указателей на поиск
