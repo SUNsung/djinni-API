@@ -24,6 +24,7 @@ if(!$DJ->is_auth()){
 }
 
 $arr = [
+    "jobsFilter" => $DJ->load_jobsFilter(),   //Обьект указателей на поиск
     "archive" => $DJ->load_inbox(is_archive: true),  //получение сообщений из архива
     "inbox" => $DJ->load_inbox()   //ПОлучение сообщений из почтового ящика
 ];
