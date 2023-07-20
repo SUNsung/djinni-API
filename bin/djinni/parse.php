@@ -109,7 +109,7 @@ class parse{
     protected function parse_jobs_filter(string $html_body):filterObj{
 
         //ПОлучение блоков сообщений
-        $ret = $this->__get_array("jobs-filter__set-title", "jobs-filter__set", $html_body, "</form>");
+        $ret = $this->__get_array("jobs-filter__set-title", "jobs-filter__set", $html_body, "jobs-filter__btns");
 
         //Порсинг блоков и возврат
         return $this->__parse_jobs_filter($ret);
@@ -147,65 +147,58 @@ class parse{
         foreach ($buf_arr as $pos=>$bom){
             switch ($pos){
 
-                case 0://specialization
+                //specialization
+                case 0:
                     $ret->specialization->name = $bom["name"];
-
-                    //Разбиение на подблоки
-                    $buf_arr = explode('name="primary_keyword"', $bom["html"]);
-                    unset($buf_arr[0]);
-
-                    //Перебор подблоков и получение данных
-                    foreach ($buf_arr as $ii=>$htm){
-                        $htm = explode('class="  "', $htm)[0];
-
-                        //Формирование выдачи
-                        $buf_arr[$ii] = (object)[
-                            "name" => trim(strip_tags("<a".$htm)),
-                            "key" => $this->___get_param("value", $htm)
-                        ];
-                    }
-
-                    $ret->specialization->values = $buf_arr;
+                    $ret->specialization->values = $this->___get_paramsArr("primary_keyword", $bom["html"]);
                     break;
 
+                //country
                 case 1:
                     $ret->country->name = $bom["name"];
-                    $ret->country->values[] = $bom["html"];
+                    $ret->country->values = $this->___get_paramsArr("region", $bom["html"]);
                     break;
 
+                //city
                 case 2:
                     $ret->city->name = $bom["name"];
-                    $ret->city->values[] = $bom["html"];
+                    $ret->city->values = $this->___get_paramsArr("location", $bom["html"]);
                     break;
 
+                //experience
                 case 3:
                     $ret->experience->name = $bom["name"];
-                    $ret->experience->values[] = $bom["html"];
+                    $ret->experience->values = $this->___get_paramsArr("exp_level", $bom["html"]);
                     break;
 
+                //employment
                 case 4:
                     $ret->employment->name = $bom["name"];
-                    $ret->employment->values[] = $bom["html"];
+                    $ret->employment->values = $this->___get_paramsArr("employment", $bom["html"]);
                     break;
 
+                //company_type
                 case 5:
                     $ret->companyType->name = $bom["name"];
-                    $ret->companyType->values[] = $bom["html"];
+                    $ret->companyType->values = $this->___get_paramsArr("company_type", $bom["html"]);
                     break;
 
+                //salary
                 case 6:
                     $ret->salaryFrom->name = $bom["name"];
-                    $ret->salaryFrom->values[] = $bom["html"];
+                    $ret->salaryFrom->values = $this->___get_paramsArr("salary", $bom["html"]);
                     break;
 
+                //english_level
                 case 7:
                     $ret->english->name = $bom["name"];
-                    $ret->english->values[] = $bom["html"];
+                    $ret->english->values = $this->___get_paramsArr("english_level", $bom["html"]);
                     break;
 
+                //editorial
                 case 8:
                     $ret->others->name = $bom["name"];
-                    $ret->others->values[] = $bom["html"];
+                    $ret->others->values = $this->___get_paramsArr("editorial", $bom["html"]);
                     break;
 
             }
@@ -217,6 +210,26 @@ class parse{
         return $ret;
     }
 
+private function ___get_paramsArr(string $param, string $html_content):array{
+        $ret_arr = [];
+
+        //Разбиение на подблоки
+        $buf_arr = explode('name="'.$param.'"', $html_content);
+        unset($buf_arr[0]);
+
+        //Перебор подблоков и получение данных
+        foreach ($buf_arr as $htm){
+            $htm = explode('class="  "', $htm)[0];
+
+            //Формирование выдачи
+            $ret_arr[] = (object)[
+                "name" => trim(strip_tags("<a".$htm)),
+                "key" => $this->___get_param("value", $htm)
+            ];
+        }
+
+        return $ret_arr;
+    }
 private function __get_array(string$begin_param, string $end_param, string $html_content, string $last=""):array{
     $ret = [];
 
