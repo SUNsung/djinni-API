@@ -121,17 +121,97 @@ class parse{
         //Отсечение если ничего нет
         if(count($array) === 0) return $ret;
 
-        //перебор блоков
+        //перебор блоков для получение первичной выборки
         foreach ($array as $html_content){
 
             //Отсечение первых блоков с поиском
             if(mb_stristr($html_content, 'inputmode="search"') === false){
+                $short = strip_tags(mb_substr($html_content, 2));
+                $short = trim($short);
 
-                $buf_arr[] = [strip_tags($html_content), $html_content];
+                //Отсечение по названию
+                if(mb_strlen($short) < 40){
+                    $buf_arr[] = ["name"=>$short, "html"=>""];
+                    continue;
+                }
+
+                //Добавление в буфер блоков
+                $buf_arr[count($buf_arr)-1]["html"] .= "  ".$html_content;
             }
         }
 
-        \sys::print($buf_arr);
+        //Отсечение если сломался парсер верстки
+        if(count($buf_arr) !== 9) \sys::print(code: 500, title: "Failed to get search parameters");
+
+        //Перебор буфера для получения фактических обьектов
+        foreach ($buf_arr as $pos=>$bom){
+            switch ($pos){
+
+                case 0://specialization
+                    $ret->specialization->name = $bom["name"];
+
+                    //Разбиение на подблоки
+                    $buf_arr = explode('name="primary_keyword"', $bom["html"]);
+                    unset($buf_arr[0]);
+
+                    //Перебор подблоков и получение данных
+                    foreach ($buf_arr as $ii=>$htm){
+                        $htm = explode('class="  "', $htm)[0];
+
+                        //Формирование выдачи
+                        $buf_arr[$ii] = (object)[
+                            "name" => trim(strip_tags("<a".$htm)),
+                            "key" => $this->___get_param("value", $htm)
+                        ];
+                    }
+
+                    $ret->specialization->values = $buf_arr;
+                    break;
+
+                case 1:
+                    $ret->country->name = $bom["name"];
+                    $ret->country->values[] = $bom["html"];
+                    break;
+
+                case 2:
+                    $ret->city->name = $bom["name"];
+                    $ret->city->values[] = $bom["html"];
+                    break;
+
+                case 3:
+                    $ret->experience->name = $bom["name"];
+                    $ret->experience->values[] = $bom["html"];
+                    break;
+
+                case 4:
+                    $ret->employment->name = $bom["name"];
+                    $ret->employment->values[] = $bom["html"];
+                    break;
+
+                case 5:
+                    $ret->companyType->name = $bom["name"];
+                    $ret->companyType->values[] = $bom["html"];
+                    break;
+
+                case 6:
+                    $ret->salaryFrom->name = $bom["name"];
+                    $ret->salaryFrom->values[] = $bom["html"];
+                    break;
+
+                case 7:
+                    $ret->english->name = $bom["name"];
+                    $ret->english->values[] = $bom["html"];
+                    break;
+
+                case 8:
+                    $ret->others->name = $bom["name"];
+                    $ret->others->values[] = $bom["html"];
+                    break;
+
+            }
+        }
+
+        \sys::print($ret);
 
 
         return $ret;
