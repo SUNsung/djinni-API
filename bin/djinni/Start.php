@@ -12,7 +12,7 @@ class Start extends net{
     public function __construct(protected string $mail, protected string $password){
         $this->uuid = sha1( string: $this->mail.":". $this->password, binary: false);
         $this->bufDir = __DIR__."/buf";
-        $this->useragent = \sys::server_userAgent();
+        $this->useragent = is_string($_SERVER["HTTP_USER_AGENT"])? $_SERVER["HTTP_USER_AGENT"]:"Djinni API";
 
         //Первичный конструктор на буферную директорию
         if(!file_exists(filename: $this->bufDir)) mkdir(directory: $this->bufDir, permissions: 0777);
@@ -182,7 +182,7 @@ class Start extends net{
 
         //Загрузка ключа для авторизации
         $buf = $this->send_req(url: "https://djinni.co/login");
-        if($buf->code !== 200) \sys::print(code: 500, title: "Failed to load csrfMiddleWareToken");
+        if($buf->code !== 200) throw new \ErrorException("Failed to load csrfMiddleWareToken");
 
         //Парсинг ключа
         $this->csrToken = $this->parse_csrfmiddlewaretoken(html_body: $buf->body);

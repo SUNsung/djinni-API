@@ -141,7 +141,7 @@ class parse{
         }
 
         //Отсечение если сломался парсер верстки
-        if(count($buf_arr) !== 9) \sys::print(code: 500, title: "Failed to get search parameters");
+        if(count($buf_arr) !== 9) throw new \ErrorException("Failed to get search parameters");
 
         //Массив связности парсера
         $key_arr = [

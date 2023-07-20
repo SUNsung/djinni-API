@@ -41,12 +41,6 @@ final class sys{
         exit();
     }
 
-    /** Переход на другой лист с отсечением */
-    static public function validateRout(string $fullpath):string{
-        if(!file_exists($fullpath)) self::print(code:404, title: "Path not Found [sys]");
-        return $fullpath;
-    }
-
     //Засахарение серверных ответов
     static public function server_isSSL():bool{return $_SERVER["HTTP_SSL"]>0;}
     static public function server_contentType():string|null{return $_SERVER["HTTP_CONTENT_TYPE"];}
@@ -55,51 +49,4 @@ final class sys{
     static public function server_ip():string|null{return $_SERVER["REMOTE_ADDR"];}
     static public function server_method():string|null{return $_SERVER["REQUEST_METHOD"];}
     static public function server_host():string|null{return $_SERVER["HTTP_HOST"];}
-
-    /** Генерирование уникального UIID по параметрам */
-    static public function generate_uiid(
-        int $length=16,
-        bool $numbers=true,
-        bool $latin=true,
-        bool $kiril=false,
-        bool $upper=false,
-        $hirigana=false,
-        bool $katakana=false,
-        bool $sumvols=false,
-        bool $alt_sumvols=false
-    ):string{
-
-        $numb = "1234567890";
-        $lat = "qazxswedcvfrtgbnhyujmkiolp";
-        $kir = "йфячыцувсмакепитрнгоьблшщдюжзхэъїє";
-        $hir = "あかさたなはまやらわがざだばぱいきしちにひみりぎじびぴうくすつぬふむゆるぐずぶぷえけせてねへめれげぜでべぺおこそとのほもよろをんごぞどぼぽ";
-        $kat = "ンワラヤマハナタサカアリミヒニチシキイウクスツヌフムユルレメヘネテセケエヲロヨモホノトソコオ";
-        $sum = "~!@#$%^&*()_+{}[]:<>?/.,`";
-        $alt = "〄〇〓《》〒〠〰〶〷〹〸〺〻〼〽〜。〃";
-
-        $form_krt = "";
-        $uiid="";
-
-        if($numbers)$form_krt .= $numb;
-        if($latin)$form_krt .= $lat;
-        if($kiril)$form_krt .= $kir;
-        if($hirigana)$form_krt .= $hir;
-        if($katakana)$form_krt .= $kat;
-        if($sumvols)$form_krt .= $sum;
-        if($alt_sumvols)$form_krt .= $alt;
-        if($upper)$form_krt .= mb_strtoupper($form_krt);
-        $size = mb_strlen($form_krt)-1;
-
-        //Отсечение если строка для подбора невалидна
-        if($size < 4) throw new BadFunctionCallException("Breck params in 'generate_uiid'");
-
-        //Разбиение на массив и перемешивание в случайном порядке
-        $form_krt = str_split($form_krt, 1);
-        shuffle($form_krt);
-
-        //Генерация ключа
-        for($pos=0; $pos<$length; $pos++){$uiid .= $form_krt[random_int(0, $size)];}
-
-        return $uiid;
-    }
 }
