@@ -18,13 +18,7 @@ date_default_timezone_set('Etc/GMT+0');
 require_once __DIR__."/.conf.php";
 require_once __DIR__."/sys.php";
 
-//ПОдключение классов джини
-require_once __DIR__."/djinni/reqObj.php";
-require_once __DIR__."/djinni/filterObj.php";
-require_once __DIR__."/djinni/inboxMsgObj.php";
-require_once __DIR__."/djinni/search.php";
-require_once __DIR__."/djinni/parse.php";
-require_once __DIR__."/djinni/net.php";
+//ПОдключение классa джини
 require_once __DIR__."/djinni/Start.php";
 
 //Автозагрущик классов

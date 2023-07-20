@@ -2,6 +2,13 @@
 
 namespace djinni;
 
+require_once __DIR__."/reqObj.php";
+require_once __DIR__."/filterObj.php";
+require_once __DIR__."/inboxMsgObj.php";
+require_once __DIR__."/search.php";
+require_once __DIR__."/parse.php";
+require_once __DIR__."/net.php";
+
 class Start extends net{
     protected string $uuid;
     protected string $bufDir;
