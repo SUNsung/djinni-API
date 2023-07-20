@@ -89,8 +89,11 @@ class parse{
             $msg_obj->msg = $msg;
             $msg_obj->name = $work;
             $msg_obj->comments = $comments;
-            $msg_obj->recruiter = $recruiter;
             $msg_obj->date = $datetime;
+
+            $recruiter = explode(",", $recruiter);
+            $msg_obj->recruiter->name = trim($recruiter[0]);
+            $msg_obj->recruiter->type = trim($recruiter[1]);
 
             $msg_obj->company->id = intval($company_id);
             $msg_obj->company->name = $company_name;

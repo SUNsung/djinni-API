@@ -44,7 +44,10 @@ sys::print($arr);
   "msg": "Ви відкрили контакти роботодавцю.",
   "date": "18 липня 2023 р.",
   "comments": false,
-  "recruiter": "Tatiana Zalvovska, Senior Technical Recruiter",
+  "recruiter": {
+    "name":"Tatiana Zalvovska",
+    "type":"Senior Technical Recruiter"
+  },
   "company": {
     "id": 23599,
     "name": "Beliani",
