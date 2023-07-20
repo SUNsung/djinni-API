@@ -24,9 +24,11 @@ if(!$DJ->is_auth()){
 }
 
 $arr = [
+    "profileView" => $DJ->load_profileView(), //Список пользователей что просматривали профиль за последний месяц
     "jobsFilter" => $DJ->load_jobsFilter(),   //Обьект указателей на поиск
+    "search" => $DJ->start_search()->add_specialization("PHP"),   //Получение вакансий по поисковым параметрам
     "archive" => $DJ->load_inbox(is_archive: true),  //получение сообщений из архива
-    "inbox" => $DJ->load_inbox()   //ПОлучение сообщений из почтового ящика
+    "inbox" => $DJ->load_inbox()   //Получение сообщений из почтового ящика
 ];
 
 sys::print($arr);
