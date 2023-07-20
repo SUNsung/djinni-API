@@ -17,42 +17,15 @@ class parse{
 
     /** получение сообщений из тела сообщений */
     protected function parse_inbox_msg(string $html_body):array{
-        $ret = [];
 
-        //Получение первичного отрезка
-        $bb = mb_stristr($html_body, "proposals-wrapper");
-
-        //Перебор всех входжений
-        while ($bb !== false){
-
-            //Получение точки отчета и смещение
-            $bb = mb_stristr($bb, "inbox-row-");
-            $bb = mb_substr($bb, 10);
-
-            //обрезка блока до контекстного конца
-            $msg = mb_stristr($bb, "inbox-read-icons", true);
-
-            //Удаление лишних символов из верстки
-            $msg = explode("\n", $msg);
-            foreach ($msg as $pos=>$str) $msg[$pos] = trim($str);
-            $msg = join(" ", $msg);
-
-            //Формирование буфера или выход
-            if(mb_strlen($msg) > 16)
-                $ret[] = $msg;
-            else
-                break;
-        }
-
-        //Отсечение если ничего нет
-        if(count($ret) === 0) $ret = [];
+        //ПОлучение блоков сообщений
+        $ret = $this->__get_array("inbox-row-", "inbox-read-icons", $html_body);
 
         //парсин блоков
         $ret = $this->__parse_inbox_msg($ret);
 
         return $ret;
     }
-    /** парсинг полученных блоков на контент */
     private function __parse_inbox_msg(array $array):array{
         $ret_arr = [];
 
@@ -131,6 +104,127 @@ class parse{
 
         return $ret_arr;
     }
+
+    /** парсинг страницы на фильтры для поиска */
+    protected function parse_jobs_filter(string $html_body):filterObj{
+
+        //ПОлучение блоков сообщений
+        $ret = $this->__get_array("jobs-filter__set-title", "jobs-filter__set", $html_body, "jobs-filter__btns");
+
+        //Порсинг блоков и возврат
+        return $this->__parse_jobs_filter($ret);
+    }
+    private function __parse_jobs_filter(array $array):filterObj{
+        $ret = new filterObj();
+        $buf_arr = [];
+
+        //Отсечение если ничего нет
+        if(count($array) === 0) return $ret;
+
+        //перебор блоков для получение первичной выборки
+        foreach ($array as $html_content){
+
+            //Отсечение первых блоков с поиском
+            if(mb_stristr($html_content, 'inputmode="search"') === false){
+                $short = strip_tags(mb_substr($html_content, 2));
+                $short = trim($short);
+
+                //Отсечение по названию
+                if(mb_strlen($short) < 40){
+                    $buf_arr[] = ["name"=>$short, "html"=>""];
+                    continue;
+                }
+
+                //Добавление в буфер блоков
+                $buf_arr[count($buf_arr)-1]["html"] .= "  ".$html_content;
+            }
+        }
+
+        //Отсечение если сломался парсер верстки
+        if(count($buf_arr) !== 9) \sys::print(code: 500, title: "Failed to get search parameters");
+
+        //Массив связности парсера
+        $key_arr = [
+            ["specialization", "primary_keyword"],
+            ["country", "region"],
+            ["city", "location"],
+            ["experience", "exp_level"],
+            ["employment", "employment"],
+            ["companyType", "company_type"],
+            ["salaryFrom", "salary"],
+            ["english", "english_level"],
+            ["others", "editorial"]
+        ];
+
+        //Перебор буфера для получения фактических обьектов
+        foreach ($buf_arr as $pos=>$bom){
+            $ret->{$key_arr[$pos][0]}->name = $bom["name"];
+            $ret->{$key_arr[$pos][0]}->values = $this->___get_paramsArr($key_arr[$pos][1], $bom["html"]);
+        }
+
+        return $ret;
+    }
+
+private function ___get_paramsArr(string $param, string $html_content):array{
+        $ret_arr = [];
+
+        //Разбиение на подблоки
+        $buf_arr = explode('name="'.$param.'"', $html_content);
+        unset($buf_arr[0]);
+
+        //Перебор подблоков и получение данных
+        foreach ($buf_arr as $htm){
+            $htm = explode('class="  "', $htm)[0];
+
+            //Формирование выдачи
+            $ret_arr[] = (object)[
+                "name" => trim(strip_tags("<a".$htm)),
+                "key" => $this->___get_param("value", $htm)
+            ];
+        }
+
+        return $ret_arr;
+    }
+private function __get_array(string$begin_param, string $end_param, string $html_content, string $last=""):array{
+    $ret = [];
+
+    //Получение первичного отрезка
+    $bb = mb_stristr($html_content, $begin_param);
+    $length = mb_strlen($begin_param);
+    $last_block = "";
+
+    //Перебор всех входжений
+    while ($bb !== false){
+
+        //Получение точки отчета и смещение
+        $bb = mb_stristr($bb, $begin_param);
+        $bb = mb_substr($bb, $length);
+
+        //обрезка блока до контекстного конца
+        $msg = mb_stristr($bb, $end_param, true);
+        if($msg === false) break;
+        $last_block = $msg;
+
+        //Удаление лишних символов из верстки
+        $msg = $this->___clear_html($msg);
+
+        //Формирование буфера или выход
+        if(mb_strlen($msg) > 16)
+            $ret[] = $msg;
+        else
+            break;
+    }
+
+    //Обработка хвостового если нужно
+    if($last !== ""){
+        $bb = mb_stristr($html_content, $last_block);
+        $bb = mb_substr($bb, mb_strlen($last_block));
+        $bb = mb_stristr($bb, $last, true);
+        $ret[] = $this->___clear_html($bb);
+    }
+
+    return $ret;
+}
 private function ___get_param(string $name, string $html_content):string{//Конструктор для получение данных из первичных атрибутов
         $name = $name.'="';
 
@@ -147,6 +241,13 @@ private function ___get_block(string $html_content):string{//Конструкт�
         $string = trim($string);
 
         return $string;
+    }
+private function ___clear_html(string $html):string{
+    $html = explode("\n", $html);
+    foreach ($html as $pos=>$str) $html[$pos] = trim($str);
+    $html = join(" ", $html);
+
+    return $html;
     }
 
 }
