@@ -16,13 +16,6 @@ if(!$DJ->is_auth()){
 }
 
 
-$search = $DJ->start_search(all_page: true);
-$search->add_specialization("PHP");
-$search->add_english("no_english")->add_english("basic")->add_english("pre");
-$search->add_salaryFrom("1500");
-$search->add_employment("remote");
-sys::print($DJ->load_search(), "Search");
-
 $arr = [
     "profileView" => $DJ->load_profileView(), //Список пользователей что просматривали профиль за последний месяц
     "jobsFilter" => $DJ->load_jobsFilter(),   //Обьект указателей на поиск
