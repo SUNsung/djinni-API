@@ -18,6 +18,7 @@ class inboxMsgObj{
 }
 class inboxMsgObj_company{
     public int $id;
+    public string $paramId;
     public string $name;
     public string|bool $img;
     public string $url;

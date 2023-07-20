@@ -50,6 +50,7 @@ sys::print($arr);
   },
   "company": {
     "id": 23599,
+    "paramId": "beliani-com-837ef",
     "name": "Beliani",
     "img": "https://p.djinni.co/05/ee7b05b7a7966223a16a942b37cef1/1677054671213_400.jpg",
     "url": "https://djinni.co/jobs/?company=beliani-com-837ef",

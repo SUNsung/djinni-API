@@ -96,6 +96,7 @@ class parse{
             $msg_obj->recruiter->type = trim($recruiter[1]);
 
             $msg_obj->company->id = intval($company_id);
+            $msg_obj->company->paramId = trim(explode("?company=", $recruiter_url)[1]);
             $msg_obj->company->name = $company_name;
             $msg_obj->company->url = $recruiter_url;
             $msg_obj->company->img = $userpic;
