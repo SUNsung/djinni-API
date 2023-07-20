@@ -49,7 +49,7 @@ class search{
     public function titleOnly(bool $status):self{$this->titleOnly = $status; return $this;}
 
     /** Генерирование поисковой строки с параметрами */
-    public function go():string{
+    public function get_url():string{
         $url = "https://djinni.co/jobs/?all-keywords=";
 
         //Параметры подробного поиска

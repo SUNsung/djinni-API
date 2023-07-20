@@ -113,6 +113,31 @@ class Start extends net{
         return $this->parse_profileView($buf->body);
     }
 
+    private ?search $search = null;
+    private bool $search_allPage;
+    private int $search_pages;
+    /** Запуск конструктора поисковика */
+    public function start_search(bool $all_page=false, int $pages=1):search{
+        $this->search = new \djinni\search();
+        $this->search_pages = $pages;
+        $this->search_allPage = $all_page;
+
+        return $this->search;
+    }
+    /** ПОлучение результата поиска */
+    public function load_search():array{
+        $arr =[];
+        if($this->search === null) return $arr;
+
+        // $this->search->get_url()
+
+        $arr[] = $this->search->get_url();
+
+
+        $this->search = null;
+        return $arr;
+    }
+
 //#############################################################################//
 
     /** Получение информации по классу */
