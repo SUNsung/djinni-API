@@ -15,7 +15,7 @@ if(!$DJ->is_auth()){
     if (!$rez) sys::print(code: 401, title: "Unauthorized");
 }
 
-//sys::print($DJ->load_profileView(), "head");
+sys::print($DJ->load_profileView(), "head");
 
 $arr = [
     "profileView" => $DJ->load_profileView(), //Список пользователей что просматривали профиль за последний месяц
@@ -23,8 +23,6 @@ $arr = [
     "archive" => $DJ->load_inbox(is_archive: true),  //получение сообщений из архива
     "inbox" => $DJ->load_inbox()   //Получение сообщений из почтового ящика
 ];
-
-
 sys::print($arr);
 
 //Финальная заглушка
