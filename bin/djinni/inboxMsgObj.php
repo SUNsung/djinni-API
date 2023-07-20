@@ -28,4 +28,5 @@ class inboxMsgObj_recruiter{
     public string $name;
     public string $type;
     public string $url;
+    public string $date;
 }

@@ -79,10 +79,6 @@ class parse{
             }else
                 $comments = false;//если архив то нет ничего
 
-
-
-
-
             $msg_obj = new inboxMsgObj();
 
             $msg_obj->id = intval($id);
@@ -164,6 +160,44 @@ class parse{
         foreach ($buf_arr as $pos=>$bom){
             $ret->{$key_arr[$pos][0]}->name = $bom["name"];
             $ret->{$key_arr[$pos][0]}->values = $this->___get_paramsArr($key_arr[$pos][1], $bom["html"]);
+        }
+
+        return $ret;
+    }
+
+    /** парсинг последних визиторов */
+    protected function parse_profileView(string $html_body):array{
+
+        //Обрезка контента до нужного блока
+        $html_body = mb_stristr($html_body, "views-wrapper");
+        $html_body = mb_stristr($html_body, "<form", true);
+
+        //парсин блоков
+        $ret = $this->__get_array('<table class="table">', "</table>", $html_body);
+        return $this->__parse_profileView($ret);
+    }
+    private function __parse_profileView(array $array):array{
+        $ret = [];
+        foreach ($array as $htm){
+
+            //Разбиение на основное
+            $htm = mb_stristr($htm, '<span class="recruiter-name">');
+            $htm = explode("<br>", $htm);
+
+            //Отсечение указания на фирму
+            $htm[1] = explode("at", $htm[1])[0];
+
+            //todo костыль пока есть автозагрущик
+            new inboxMsgObj();
+
+            //Формирование обьекта рекрутера
+            $rec = new inboxMsgObj_recruiter();
+            $rec->name = trim(strip_tags($htm[0]));
+            $rec->type = trim(strip_tags($htm[1]));
+            $rec->url = "https://djinni.co".$this->___get_param("href", $htm[0]);
+            $rec->date = trim(strip_tags($htm[2]));
+
+            $ret[] = $rec;
         }
 
         return $ret;

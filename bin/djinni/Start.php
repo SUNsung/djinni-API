@@ -101,6 +101,18 @@ class Start extends net{
         return $this->parse_jobs_filter($buf->body);
     }
 
+    /** ПОлучение списка тех кто просматривал профиль за последние 30 дней */
+    public function load_profileView():array{
+        $ret = [];
+
+        //получение страницы
+        $buf = $this->send_req("https://djinni.co/my/dashboard/");
+        if($buf->code !== 200) return $ret;
+
+        //Парсинг контента из страницы и отдача
+        return $this->parse_profileView($buf->body);
+    }
+
 //#############################################################################//
 
     /** Получение информации по классу */
