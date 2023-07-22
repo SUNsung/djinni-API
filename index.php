@@ -16,12 +16,15 @@ if(!$DJ->is_auth()){
 }
 
 
-$search = $DJ->start_search(all_page: true);
-$search->add_specialization("PHP");
-$search->add_english("no_english")->add_english("basic")->add_english("pre");
-$search->add_salaryFrom("1500");
-$search->add_employment("remote");
-sys::print($DJ->load_search(), "Search");
+$DJ->start_search(all_page: true)
+    ->add_specialization("PHP")
+    ->add_english("no_english")->add_english("basic")->add_english("pre")
+    ->add_salaryFrom("1500")
+    ->add_employment("remote");
+
+$search = $DJ->load_jobsBySearch();
+
+sys::print($search, "Search");
 
 
 $DJ->start_search(pages: 2)->add_specialization("PHP"); //Установка параметров для поиска вакансий
