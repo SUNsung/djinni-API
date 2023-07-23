@@ -16,7 +16,7 @@
 
 .
 
-###Ініціалізація
+### Ініціалізація
 
 Ініціалізація потребуе мейлу та паролю від акаунту
 ```php
@@ -30,18 +30,48 @@ new \djinni\Start();
 
 .
 
-###Параметри пошуку
+### Параметри пошуку
 
-Для отримання актуальних параметрів пошуку е метод **load_jobsFilter()**
+Для отримання актуальних параметрів пошуку е метод `load_jobsFilter()`
 
 .
 
-###Пошук
+### Пошук
 
-Для пошуку ініалізувати метод **start_search(bool $all_page, int $pages)**
+Для пошуку ініалізувати метод `start_search(bool $all_page, int $pages)`
 Необв'язкові параметри:
-- all_page: вигружати усі сторінки при пошуку чи ні  (за замовчуванням `false`)
-- pages: Скільки сторінок вигрузити. Тільки якщо `all_page=false`  (за замовчуванням `1`)
+- `all_page`: вигружати усі сторінки при пошуку чи ні  (за замовчуванням **false**)
+- `pages`: Скільки сторінок вигрузити. Тільки якщо **all_page=false**  (за замовчуванням **1**)
+
+Для отримання результату пошуку, після ініціалізації: `load_jobsBySearch()`
+
+Для отримання лише посилання на сторінку Djinny: `get_searchUrl()`
+
+Для закриття пошукової сессії: `clear_search()`
+
+.
+
+.
+
+Пошуковий об'ект мае такі методи для встановлення праметрів:
+- `page(int $page):self` - З якої сторінки починати пошук
+- `add_specialization(string $param):self`
+- `add_country(string $param):self`
+- `add_city(string $param):self` - Спрацюе тільки якщо в `add_country()` одною із країн буде **UKR**
+- `add_experience(string $param):self`
+- `add_employment(string $param):self`
+- `add_companyType(string $param):self`
+- `add_salaryFrom(string $param):self`
+- `add_english(string $param):self`
+- `add_others(string $param):self`
+- `fulltext(bool $status):self` - Шукати **anyOfKeywords()** по всьому тексту
+- `titleOnly(bool $status):self` - Шукати **anyOfKeywords()** тільки в назві вакансії
+- `anyOfKeywords(string $string):self`
+- `excludeKeywords(string $string):self` - Виключаюча пошукова строка
+
+Пошуковий об'ект мае такі методи для отримання данних:
+- `get_page():int`
+- `get_url():string`
 
 .
 
@@ -59,6 +89,8 @@ $SS->add_english("no_english")->add_english("basic")->add_english("pre");
 $SS->add_specialization("PHP");
 $SS->add_salaryFrom("2500");
 $SS->add_employment("remote");
+
+ print json_encode($DJ->load_jobsBySearch());
 ```
 
 ---
