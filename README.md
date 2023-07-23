@@ -54,19 +54,20 @@ new \djinni\Start();
 .
 
 Пошуковий об'ект мае такі методи для встановлення праметрів:
-- `page(int $page):self`
+- `page(int $page):self` - З якої сторінки починати пошук
 - `add_specialization(string $param):self`
 - `add_country(string $param):self`
+- `add_city(string $param):self` - Спрацюе тільки якщо в `add_country()` одною із країн буде **UKR**
 - `add_experience(string $param):self`
 - `add_employment(string $param):self`
 - `add_companyType(string $param):self`
 - `add_salaryFrom(string $param):self`
 - `add_english(string $param):self`
 - `add_others(string $param):self`
-- `fulltext(bool $status):self`
-- `titleOnly(bool $status):self`
+- `fulltext(bool $status):self` - Шукати **anyOfKeywords()** по всьому тексту
+- `titleOnly(bool $status):self` - Шукати **anyOfKeywords()** тільки в назві вакансії
 - `anyOfKeywords(string $string):self`
-- `excludeKeywords(string $string):self`
+- `excludeKeywords(string $string):self` - Виключаюча пошукова строка
 
 Пошуковий об'ект мае такі методи для отримання данних:
 - `get_page():int`
