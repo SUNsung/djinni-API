@@ -22,7 +22,7 @@ class inboxMsgObj_company{
     public string $name;
     public string|bool $img;
     public string $url;
-    public bool $is_top=false;
+    public bool $is_top;
 }
 class inboxMsgObj_recruiter{
     public string $name;

@@ -4,6 +4,7 @@ namespace djinni;
 
 class search{
     protected int $page = 1;
+    protected const session_uuid="djinni_search_";
 
     protected string $anyOfKeywords="";
     protected string $excludeKeywords="";
@@ -39,6 +40,7 @@ class search{
 
     /** Установка страницы */
     public function page(int $page):self{if($page>0) $this->page = $page; return $this;}
+    public function get_page():int{return $this->page;}
     /** Установка ключевых слов для поиска */
     public function anyOfKeywords(string $string):self{if(mb_strlen($string)>0) $this->anyOfKeywords = $string; return $this;}
     /** Установка исключающих ключивых слов */
@@ -50,6 +52,11 @@ class search{
 
     /** Генерирование поисковой строки с параметрами */
     public function get_url():string{
+
+        //Получение кешированого результата
+        if($this->is_existsInBuffer()) return $this->get_fromBuffer();
+
+        //Нормальная обработка формированием параметров
         $url = "https://djinni.co/jobs/?all-keywords=";
 
         //Параметры подробного поиска
@@ -57,11 +64,11 @@ class search{
         if($this->titleOnly !== null)  $url .= "&title_only=".($this->titleOnly? "on":"off");
 
         //Подробный поиск по ключеным словам
-        $url .= "&any-of-keywords=".urlencode($this->anyOfKeywords);
-        $url .= "&exclude-keywords=".urlencode($this->excludeKeywords);
+        $url .= "&any-of-keywords=".urlencode(string: $this->anyOfKeywords);
+        $url .= "&exclude-keywords=".urlencode(string: $this->excludeKeywords);
 
         //Отсечение городов если нет Украины
-        if(count($this->city) > 0) if(!in_array("UKR", $this->country)) $this->city = [];
+        if(count(value: $this->city) > 0) if(!in_array(needle: "UKR", haystack: $this->country)) $this->city = [];
 
         //Массив связности парсера
         $key_arr = [
@@ -78,13 +85,36 @@ class search{
 
         //Формирование парметров из массивов
         foreach ($key_arr as $pp){
-            foreach ($this->{$pp[0]} as $param) $url .= "&".$pp[1]."=".trim($param);
+            foreach ($this->{$pp[0]} as $param) $url .= "&".$pp[1]."=".trim(string: $param);
         }
 
         //Указатель на страницу
         if($this->page < 1) $this->page = 1;
         if($this->page > 1) $url .= "&page=".$this->page;
 
+        $this->add_toBuffer(url: $url);
         return $url;
     }
+
+    private function get_uuidRequest():string{
+        return base64_encode(string: sha1(string: json_encode(value: [
+            $this->page,
+            $this->anyOfKeywords,
+            $this->excludeKeywords,
+            $this->fulltext,
+            $this->titleOnly,
+            $this->specialization,
+            $this->country,
+            $this->city,
+            $this->experience,
+            $this->employment,
+            $this->companyType,
+            $this->salaryFrom,
+            $this->english,
+            $this->others
+        ]), binary: true));
+    }
+    private function is_existsInBuffer():bool{return isset($_SESSION[$this::session_uuid.$this->get_uuidRequest()]);}
+    private function add_toBuffer(string $url):void{$_SESSION[$this::session_uuid.$this->get_uuidRequest()] = $url;}
+    private function get_fromBuffer():string|null{return $_SESSION[$this::session_uuid.$this->get_uuidRequest()];}
 }
