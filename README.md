@@ -14,6 +14,47 @@
 
 Читання **листів** та **останніх відвідувачів** потребуе авторізаціі. Реалізована авторизація через email+pass.
 
+.
+###Ініціалізація
+
+Ініціалізація потребуе мейлу та паролю від акаунту
+```php
+new \djinni\Start(mail: $user_email, password: $user_pass);
+```
+
+Можна ініціалюзувати без авторизаціі
+```php
+new \djinni\Start();
+```
+
+.
+###Параметри пошуку
+
+Для отримання актуальних параметрів пошуку е метод **load_jobsFilter()**
+
+.
+###Пошук
+
+Для пошуку ініалізувати метод **start_search(bool $all_page, int $pages)**
+Необв'язкові параметри:
+- all_page: вигружати усі сторінки при пошуку чи ні  (за замовчуванням `false`)
+- pages: Скільки сторінок вигрузити. Тільки якщо `all_page=false`  (за замовчуванням `1`)
+
+
+Приклади встановлення пошукових пармерів:
+```php
+$DJ->start_search()->add_specialization("PHP")->add_employment("remote");
+```
+```php
+$DJ->start_search()->page(2);
+```
+```php
+$SS = $DJ->start_search();
+$SS->add_english("no_english")->add_english("basic")->add_english("pre");
+$SS->add_specialization("PHP");
+$SS->add_salaryFrom("2500");
+$SS->add_employment("remote");
+```
 
 ---
 
