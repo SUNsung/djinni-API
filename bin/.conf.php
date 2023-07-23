@@ -1,7 +1,7 @@
 <?php
 
 class sysConstants{
-    static public string $ver = "1.0.0";
+    static public string $ver = "1.0.2";
     static public string $name = "gjinni API";
     static public string $mail = "git@embedded.biz.ua";
 

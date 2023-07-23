@@ -5,6 +5,7 @@ namespace djinni;
 class search{
     protected int $page = 1;
     protected const session_uuid="djinni_search_";
+    protected const buffering = true;
 
     protected string $anyOfKeywords="";
     protected string $excludeKeywords="";
@@ -56,7 +57,7 @@ class search{
     public function get_url():string{
 
         //Получение кешированого результата
-        if($this->is_existsInBuffer()) return $this->get_fromBuffer();
+        if($this::buffering)if($this->is_existsInBuffer()) return $this->get_fromBuffer();
 
         //Нормальная обработка формированием параметров
         $url = "https://djinni.co/jobs/?all-keywords=";
@@ -68,6 +69,13 @@ class search{
         //Подробный поиск по ключеным словам
         $url .= "&any-of-keywords=".urlencode(string: $this->anyOfKeywords);
         $url .= "&exclude-keywords=".urlencode(string: $this->excludeKeywords);
+
+        //новый функционал (?????) исключаюшие слова нужно отдельно прописывать
+        if($this->excludeKeywords !== ""){
+            $bbb = explode(" ", $this->excludeKeywords);
+            $url .= "&keywords=";
+            foreach ($bbb as $param) $url .= "-".$param."+";
+        }
 
         //Отсечение городов если нет Украины
         if(count(value: $this->city) > 0) if(!in_array(needle: "UKR", haystack: $this->country)) $this->city = [];
@@ -94,7 +102,7 @@ class search{
         if($this->page < 1) $this->page = 1;
         if($this->page > 1) $url .= "&page=".$this->page;
 
-        $this->add_toBuffer(url: $url);
+        if($this::buffering)$this->add_toBuffer(url: $url);
         return $url;
     }
 
