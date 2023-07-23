@@ -4,7 +4,7 @@ namespace djinni;
 
 class parse{
 
-    /** Получение токена из тела запроса */
+    /** Отримання токена із тіла запроса */
     protected function parse_csrfmiddlewaretoken(string $html_body):string{
         preg_match('/<input type=\'hidden\' name=\'csrfmiddlewaretoken\' value=\'[A-Za-z0-9]*\'/u',$html_body,$result);
         preg_match('/\'[A-Za-z0-9]*\'$/u',$result[0],$result1);
@@ -13,11 +13,7 @@ class parse{
     }
 
 
-
-    //todo долина костылей
-
-
-    /** получение сообщений из тела сообщений */
+    /** парсинг  листів */
     protected function parse_inbox_msg(string $html_body):array{
 
         //ПОлучение блоков сообщений
@@ -107,7 +103,7 @@ class parse{
         return $ret_arr;
     }
 
-    /** парсинг страницы на фильтры для поиска */
+    /** парсинг дерева рааметрів для пошуку */
     protected function parse_jobs_filter(string $html_body):filterObj{
 
         //ПОлучение блоков сообщений
@@ -167,7 +163,7 @@ class parse{
         return $ret;
     }
 
-    /** парсинг последних визиторов */
+    /** парсинг останіх візіторов */
     protected function parse_profileView(string $html_body):array{
 
         //Обрезка контента до нужного блока
@@ -206,7 +202,7 @@ class parse{
     }
 
 
-    /** Парсинг номеров страниц из пагинатора поиска */
+    /** Парсинг номерів сторінок для пошуку */
     protected function parse_search_pages(string $html):array{
         $pagination = mb_stristr($html, 'class="pagination');
         $pagination = mb_stristr($pagination, "</ul>", true);
@@ -221,7 +217,7 @@ class parse{
 
         return $pages;
     }
-    /** Парсинг поисковой страницы */
+    /** Парсинг вакансій */
     protected function parse_search_content(string $html_body):array{return $this->__blocks_parse_search_content($html_body);}
     private function __blocks_parse_search_content(string $html):array{
         $rez = [];

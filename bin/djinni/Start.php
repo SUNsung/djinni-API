@@ -37,12 +37,12 @@ class Start extends net{
     public function __toString():string{return json_encode($this->info());}
 
 //⬇⬇############################⬇⬇[ AUTH ONLY ]⬇⬇############################⬇⬇//
-    /** Очистка "сессии" */
+    /** Очистка "сессії" */
     protected function clear_sessions():void{
         $contents = scandir(directory: $this->bufDir);
         foreach ($contents as $file) if(!in_array($file, ["", ".", "..", "..."])) unlink(filename: $this->bufDir."/".$file);
     }
-    /** Получение ключа csrToken необходимого для авторизации */
+    /** Отримання ключа csrToken необхідного для авторизації */
     protected function get_csrToken(bool $is_load=false):string{
         $upload = $is_load;
 
@@ -62,7 +62,7 @@ class Start extends net{
         return $this->csrToken;
     }
 
-    /** Авторизация на ресурсе */
+    /** Авторизація на ресурсі */
     public function auth():bool{
         $arr_send = [
             "csrfmiddlewaretoken" => $this->get_csrToken(),
@@ -99,7 +99,7 @@ class Start extends net{
         $this->uptime_auth();
         return true;
     }
-    /** Закрыть текущую сессию */
+    /** Закрити сессію */
     public function logout():void{
 
         //Выход
@@ -111,7 +111,7 @@ class Start extends net{
         //Очистка сессии
         $this->clear_sessions();
     }
-    /** Проверка на авторзацию */
+    /** Перевірка на авторзацію */
     public function is_auth():bool{
         if($this->userAuth) return true;
 
@@ -134,7 +134,7 @@ class Start extends net{
     private function uptime_auth():void{if($this->userAuth) $_SESSION[$this::session_uuid."auth_time"] = strtotime("now");}
     private function clear_auth():void{unset($_SESSION[$this::session_uuid."auth_time"]);}
 
-    /** Загрузка писем в почтовике */
+    /** Завантаження листів */
     public function load_inbox(bool $is_archive=false):array{
         $ret = [];
 
@@ -147,7 +147,7 @@ class Start extends net{
         return $this->parse_inbox_msg($buf->body);
     }
 
-    /** ПОлучение списка тех кто просматривал профиль за последние 30 дней */
+    /** Отримання списку тіх хто дивився профіль за останні 30 днів */
     public function load_profileView():array{
         $ret = [];
 
@@ -161,7 +161,7 @@ class Start extends net{
     }
 //⬆⬆############################⬆⬆[ AUTH ONLY ]⬆⬆############################⬆⬆//
 
-    /** Получение массива ключей для поиска */
+    /** Отримання дерева пошукових параметрів */
     public function load_jobsFilter():filterObj|bool{
 
         //получение страницы
@@ -172,7 +172,7 @@ class Start extends net{
         return $this->parse_jobs_filter($buf->body);
     }
 
-    /** Загрузка результата поиска */
+    /** Отримання результу пошуку */
     public function load_jobsBySearch(bool|null $all_page=null, int|null $pages=null):array{
         if($this->search === null) return [];
 
@@ -227,7 +227,7 @@ class Start extends net{
         }else return $this->parse_search_content($first_page->body);
     }
 
-    /** Запуск конструктора поисковика */
+    /** Запуск конструктора пошукового запросу */
     public function start_search(bool $all_page=false, int $pages=1):search{
         $this->search = new \djinni\search();
         $this->search_pages = $pages;
@@ -235,9 +235,9 @@ class Start extends net{
 
         return $this->search;
     }
-    /** Очистка поисковой сессии */
+    /** Очистка пошукового конструктора */
     public function clear_search():void{ unset($this->search); $this->search = null; }
-    /** ПОлучение валидной ссылки на результат поиска */
+    /** Отримання валідного посилання на сторінку результата пошуку */
     public function get_searchUrl(bool $clear=true):string|null{
         if($this->search === null) return null;
         $url =  $this->search->get_url();
@@ -247,7 +247,7 @@ class Start extends net{
 
 //#############################################################################//
 
-    /** Получение информации по классу */
+    /** Отримання информації по классу */
     public function info():object{
 
         //Загрузка сессионных файлов

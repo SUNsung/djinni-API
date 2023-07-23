@@ -1,9 +1,5 @@
 <?php
 
-/** Защищенные настройки */
-
-
-
 class sysConstants{
     static public string $ver = "1.0.0";
     static public string $name = "gjinni API";

@@ -6,18 +6,17 @@ class net extends parse{
     protected string $useragent;
     protected array $headers;
 
-    /** Установка юзерагента */
+    /** Встановлення юзерагента */
     public function set_useragent(string $useragent):void{$this->useragent = $useragent;}
 
-    /** Добавление заголовка */
+    /** Добавання заголовку */
     public function add_header(string $headers):void{if(mb_strlen($headers) > 3) $this->headers[] = $headers;}
 
-    /** Очистка заголовков */
+    /** Очистка заголовків */
     public function clear_headers():void{ $this->headers = [];}
 
 
-
-    /** Отправка запроса на сервер */
+    /** Відправка запроса на сервер */
     public function send_req(string $url, string $content=""):reqObj{
         $cookiePath = $this->bufDir.'/cookie.mxt';
 

@@ -21,36 +21,36 @@ class search{
     protected array $english=[];            //english_level
     protected array $others=[];             //editorial
 
-    /** Добавление параметра [specialization] для поиска */
+    /** Добавання параметра [specialization] для пошуку */
     public function add_specialization(string $param):self{if(mb_strlen($param)>0) $this->specialization[] = $param; return $this;}
-    /** Добавление параметра [country] для поиска */
+    /** Добавання параметра [country] для пошуку */
     public function add_country(string $param):self{if(mb_strlen($param)>0) $this->country[] = $param; return $this;}
-    /** Добавление параметра [experience] для поиска */
+    /** Добавання параметра [experience] для пошуку */
     public function add_experience(string $param):self{if(mb_strlen($param)>0) $this->experience[] = $param; return $this;}
-    /** Добавление параметра [employment] для поиска */
+    /** Добавання параметра [employment] для пошуку */
     public function add_employment(string $param):self{if(mb_strlen($param)>0) $this->employment[] = $param; return $this;}
-    /** Добавление параметра [companyType] для поиска */
+    /** Добавання параметра [companyType] для пошуку */
     public function add_companyType(string $param):self{if(mb_strlen($param)>0) $this->companyType[] = $param; return $this;}
-    /** Добавление параметра [salaryFrom] для поиска */
+    /** Добавання параметра [salaryFrom] для пошуку */
     public function add_salaryFrom(string $param):self{if(mb_strlen($param)>0) $this->salaryFrom[] = $param; return $this;}
-    /** Добавление параметра [english] для поиска */
+    /** Добавання параметра [english] для пошуку */
     public function add_english(string $param):self{if(mb_strlen($param)>0) $this->english[] = $param; return $this;}
-    /** Добавление параметра [others] для поиска */
+    /** Добавання параметра [others] для пошуку */
     public function add_others(string $param):self{if(mb_strlen($param)>0) $this->others[] = $param; return $this;}
 
-    /** Установка страницы */
+    /** Установка сторінки з якої почати пошук */
     public function page(int $page):self{if($page>0) $this->page = $page; return $this;}
     public function get_page():int{return $this->page;}
-    /** Установка ключевых слов для поиска */
+    /** Установка ключевих слів для пошуку */
     public function anyOfKeywords(string $string):self{if(mb_strlen($string)>0) $this->anyOfKeywords = $string; return $this;}
-    /** Установка исключающих ключивых слов */
+    /** Установка виключающих слів слов */
     public function excludeKeywords(string $string):self{if(mb_strlen($string)>0) $this->excludeKeywords = $string; return $this;}
-    /** Поиск по всему тексту вакансии */
+    /** пошук по всьому тексту вакансії */
     public function fulltext(bool $status):self{$this->fulltext = $status; return $this;}
-    /** Поиск только по титулке вакансии */
+    /** пошук тільки по назві вакансії */
     public function titleOnly(bool $status):self{$this->titleOnly = $status; return $this;}
 
-    /** Генерирование поисковой строки с параметрами */
+    /** Генерування пощукової адреси */
     public function get_url():string{
 
         //Получение кешированого результата
