@@ -7,10 +7,10 @@ require_once __DIR__."/bin/autoload.php";
 $DJ = new \djinni\Start(mail: sysConstants::$user_email, password: sysConstants::$user_pass);
 
 //Выход из сессии
-$DJ->logout();
+//$DJ->logout();
 
 //Проверка авторизации и авторизация если нужно
-if(0) if(!$DJ->is_auth()){
+if(1) if(!$DJ->is_auth()){
     $rez = $DJ->auth();
     if (!$rez) sys::print(code: 401, title: "Unauthorized");
 }

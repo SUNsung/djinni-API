@@ -5,6 +5,7 @@ namespace djinni;
 require_once __DIR__."/reqObj.php";
 require_once __DIR__."/filterObj.php";
 require_once __DIR__."/inboxMsgObj.php";
+require_once __DIR__."/searchObj.php";
 require_once __DIR__."/session.php";
 require_once __DIR__."/search.php";
 require_once __DIR__."/parse.php";
@@ -190,8 +191,9 @@ class Start extends net{
 
         //Парсинг контента из страницы
         $parse_arr = $this->parse_search_content($first_page->body);
+        $pages = $this->parse_search_pages($first_page->body);
 
-        \sys::print($parse_arr);
+        \sys::print(["pages"=>$pages, "content"=>$parse_arr]);
 
         return $ret;
     }

@@ -13,7 +13,9 @@ class parse{
     }
 
 
+
     //todo долина костылей
+
 
     /** получение сообщений из тела сообщений */
     protected function parse_inbox_msg(string $html_body):array{
@@ -204,17 +206,8 @@ class parse{
     }
 
 
-    /** Парсинг поисковой страницы */
-    protected function parse_search_content(string $html_body):array{
-        $pages = $this->__pages_parse_search_content($html_body);
-        $content = $this->__blocks_parse_search_content($html_body);
-
-
-        \sys::print([$pages, $content]);
-
-        return [];
-    }
-    private function __pages_parse_search_content(string $html):array{
+    /** Парсинг номеров страниц из пагинатора поиска */
+    protected function parse_search_pages(string $html):array{
         $pagination = mb_stristr($html, 'class="pagination');
         $pagination = mb_stristr($pagination, "</ul>", true);
         $pagination = $this->__get_array('class="page-item', "</li>", $pagination);
@@ -228,6 +221,8 @@ class parse{
 
         return $pages;
     }
+    /** Парсинг поисковой страницы */
+    protected function parse_search_content(string $html_body):array{return $this->__blocks_parse_search_content($html_body);}
     private function __blocks_parse_search_content(string $html):array{
         $rez = [];
         $load_arr = $this->__get_array('class="list-jobs__item', 'class="list-jobs__item', $html, 'class="pagination');
@@ -304,11 +299,29 @@ class parse{
             }
 
 
-            $rez[] = [$time, $see, $echo,
-                [$job_url, $job_name, $salary, $job_description],
-                [$company_img, $company_url, $company_name],
-                [$recruter_url, $recruter_name],
-                $xxx, $yyy];
+            //Формирование обьектов на выдачу
+            $search = new searchObj($job_url);
+
+            $recruter_name = explode(",", $recruter_name);
+            $search->recruiter->name = trim($recruter_name[0]);
+            $search->recruiter->type = trim($recruter_name[1]);
+            $search->recruiter->url = "https://djinni.co".$recruter_url;
+
+            $search->company->paramId = trim(explode("?company=", $company_url)[1]);
+            $search->company->name = $company_name;
+            $search->company->url  = 'https://djinni.co'.$company_url;
+            $search->company->img = $company_img;
+
+            $search->job->url = 'https://djinni.co'.$job_url;
+            $search->job->name = $job_name;
+            $search->job->salary = $salary;
+            $search->job->description = $job_description;
+
+            $search->location = $xxx;
+            $search->tags = $yyy;
+
+            //Запись в буфер
+            $rez[] = $search;
         }
 
         return $rez;
