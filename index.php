@@ -19,19 +19,17 @@ if(1) if(!$DJ->is_auth()){
 $DJ->start_search(pages: 2)
     ->add_specialization("PHP")
     ->add_english("no_english")->add_english("basic")->add_english("pre")
-    ->add_salaryFrom("1500")
+    ->add_salaryFrom("2500")
     ->add_employment("remote");
 
-$search = $DJ->load_jobsBySearch();
-
-sys::print($search, "Search");
-
+//$search = $DJ->load_jobsBySearch();
+//sys::print($search, "Search");
 
 $DJ->start_search(pages: 2)->add_specialization("PHP"); //Установка параметров для поиска вакансий
 $arr = [
     "profileView" => $DJ->load_profileView(),           //Список пользователей что просматривали профиль за последний месяц
     "jobsFilter" => $DJ->load_jobsFilter(),             //Обьект указателей на поиск
-    "search" => $DJ->load_search(),                     //Получение вакансий по поисковым параметрам
+    "search" => $DJ->load_jobsBySearch(),               //Получение вакансий по поисковым параметрам
     "archive" => $DJ->load_inbox(is_archive: true),     //получение сообщений из архива
     "inbox" => $DJ->load_inbox()                        //Получение сообщений из почтового ящика
 ];
