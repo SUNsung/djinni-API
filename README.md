@@ -45,6 +45,27 @@ new \djinni\Start();
 
 .
 
+Пошуковий об'ект мае такі методи для встановлення праметрів:
+- `page(int $page):self`
+- `add_specialization(string $param):self`
+- `add_country(string $param):self`
+- `add_experience(string $param):self`
+- `add_employment(string $param):self`
+- `add_companyType(string $param):self`
+- `add_salaryFrom(string $param):self`
+- `add_english(string $param):self`
+- `add_others(string $param):self`
+- `fulltext(bool $status):self`
+- `titleOnly(bool $status):self`
+- `anyOfKeywords(string $string):self`
+- `excludeKeywords(string $string):self`
+
+Пошуковий об'ект мае такі методи для отримання данних:
+- `get_page():int`
+- `get_url():string`
+
+.
+
 Приклади встановлення пошукових пармерів:
 
 ```php
