@@ -203,6 +203,117 @@ class parse{
         return $ret;
     }
 
+
+    /** Парсинг поисковой страницы */
+    protected function parse_search_content(string $html_body):array{
+        $pages = $this->__pages_parse_search_content($html_body);
+        $content = $this->__blocks_parse_search_content($html_body);
+
+
+        \sys::print([$pages, $content]);
+
+        return [];
+    }
+    private function __pages_parse_search_content(string $html):array{
+        $pagination = mb_stristr($html, 'class="pagination');
+        $pagination = mb_stristr($pagination, "</ul>", true);
+        $pagination = $this->__get_array('class="page-item', "</li>", $pagination);
+
+        //Плучение страниц с пагинатора
+        $pages = [];
+        foreach ($pagination as $htm){
+            $htm = intval(strip_tags('<"'.$htm));
+            if($htm > 0) $pages[] = $htm;
+        }
+
+        return $pages;
+    }
+    private function __blocks_parse_search_content(string $html):array{
+        $rez = [];
+        $load_arr = $this->__get_array('class="list-jobs__item', 'class="list-jobs__item', $html, 'class="pagination');
+
+        //Перебор всех блоков
+        foreach ($load_arr as $htm){
+            $htm = mb_stristr($htm, 'nowrap">');
+
+            //Время публикации и Количество просмотров
+            $time = $this->___get_block($htm);
+            $see = $this->___get_param("title", $htm);
+
+            //Количество 2 отозвавщихся
+            $htm = mb_stristr($htm, $see);
+            $echo = $this->___get_param("title", $htm);
+
+            //url вакансии
+            $htm = mb_stristr($htm, '<a class="profile"');
+            $job_url = $this->___get_param("href", $htm);
+
+            //Имя вакансии
+            $htm = mb_stristr($htm, 'span');
+            $job_name = $this->___get_block($htm);
+
+            //Зарплатная вилка если есть
+            $salary = mb_stristr($htm, 'public-salary-item');
+            if(is_string($salary)) $salary = $this->___get_block($salary);
+
+            //Получение описания из блока абзацами
+            $htm = mb_stristr($htm, 'text-card');
+            $buf_description = mb_stristr($htm, '>');
+            $buf_description = mb_substr($buf_description, 1);
+            $buf_description = mb_stristr($buf_description, '</div>', true);
+            $buf_description = explode("<br>",  $buf_description);
+            $job_description = [];
+            foreach ($buf_description as $text){
+                $text = strip_tags($text);
+                $text = trim($text);
+                if(mb_strlen($text)>0) $job_description[] = $text;
+            }
+
+            //лого компании если есть
+            $company_img = mb_stristr($htm, "userpic-image_img");
+            if(is_string($company_img)) $company_img = $this->___get_param("src", $company_img);
+
+            //url фирмы
+            $htm = mb_stristr($htm, 'list-jobs__details__info');
+            $company_url = $this->___get_param("href", $htm);
+
+            //имя фирмы
+            $htm = mb_stristr($htm, $company_url);
+            $company_name = $this->___get_block($htm);
+
+            //url рекрутера
+            $htm = mb_stristr($htm, $company_name);
+            $recruter_url = $this->___get_param("href", $htm);
+
+            //имя рекрутера
+            $htm = mb_stristr($htm, $recruter_url);
+            $recruter_name = $this->___get_block($htm);
+
+            //Получение локации
+            $xxx = mb_stristr($htm, '<span class="location-text">');
+            $xxx = mb_stristr($xxx, "<nobr", true);
+            $xxx = strip_tags($xxx);
+            $xxx = trim($xxx);
+
+            //ПОдучение доппараметров
+            $yyy = [];
+            foreach ($this->__get_array("<nobr", "</nobr>", $htm) as $text){
+                $text = strip_tags("<".$text);
+                $text = trim($text, " ·\r\0\t");
+                if(mb_strlen($text)>0) $yyy[] = $text;
+            }
+
+
+            $rez[] = [$time, $see, $echo,
+                [$job_url, $job_name, $salary, $job_description],
+                [$company_img, $company_url, $company_name],
+                [$recruter_url, $recruter_name],
+                $xxx, $yyy];
+        }
+
+        return $rez;
+    }
+
 private function ___get_paramsArr(string $param, string $html_content):array{
         $ret_arr = [];
 

@@ -173,13 +173,27 @@ class Start extends net{
 
     /** Загрузка результата поиска */
     public function load_jobsBySearch(bool|null $all_page=null, int|null $pages=null):array{
-        $ret_arr = [];
+        if($this->search === null) return [];
+
+        $ret = [];
         if($pages !== null) $this->search_pages = $pages;
         if($all_page !== null) $this->search_allPage = $all_page;
         if($this->search_pages < 1) $this->search_pages = 1;
 
+        //Получение страницы заданой пользователем
+        $first_page = $this->search->get_page();
 
-        return $ret_arr;
+        //получение страницы
+        $first_page = $this->send_req($this->search->get_url());
+        if($first_page->code !== 200) return $ret;
+        $this->uptime_auth();
+
+        //Парсинг контента из страницы
+        $parse_arr = $this->parse_search_content($first_page->body);
+
+        \sys::print($parse_arr);
+
+        return $ret;
     }
 
     /** Запуск конструктора поисковика */
@@ -190,11 +204,14 @@ class Start extends net{
 
         return $this->search;
     }
+    /** Очистка поисковой сессии */
+    public function clear_search():void{ unset($this->search); $this->search = null; }
     /** ПОлучение валидной ссылки на результат поиска */
-    public function get_searchUrl():string|null{
+    public function get_searchUrl(bool $clear=true):string|null{
         if($this->search === null) return null;
-        $this->search = null;
-        return $this->search->get_url();
+        $url =  $this->search->get_url();
+        if($clear) $this->clear_search();
+        return $url;
     }
 
 //#############################################################################//

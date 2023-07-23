@@ -40,6 +40,7 @@ class search{
 
     /** Установка страницы */
     public function page(int $page):self{if($page>0) $this->page = $page; return $this;}
+    public function get_page():int{return $this->page;}
     /** Установка ключевых слов для поиска */
     public function anyOfKeywords(string $string):self{if(mb_strlen($string)>0) $this->anyOfKeywords = $string; return $this;}
     /** Установка исключающих ключивых слов */
