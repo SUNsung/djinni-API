@@ -4,6 +4,9 @@ namespace djinni;
 
 class searchObj{
     public string $id;
+    public int $view;
+    public int $fill;
+    public string $date;
     public jobObj $job;
     public string $location;
     public array $tags;

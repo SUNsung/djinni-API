@@ -319,6 +319,9 @@ class parse{
 
             $search->location = $xxx;
             $search->tags = $yyy;
+            $search->view = intval($see);
+            $search->fill = intval($echo);
+            $search->date = $time;
 
             //Запись в буфер
             $rez[] = $search;
