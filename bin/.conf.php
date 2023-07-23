@@ -7,5 +7,8 @@ class sysConstants{
 
     static public $user_email="{email}";
     static public $user_pass="{pass}";
+
+    static public $tg_url_api="{tg_url_api}";
+    static public $tg_user_id=0;
 }
 
