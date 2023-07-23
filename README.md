@@ -43,6 +43,11 @@ new \djinni\Start();
 - `all_page`: вигружати усі сторінки при пошуку чи ні  (за замовчуванням **false**)
 - `pages`: Скільки сторінок вигрузити. Тільки якщо **all_page=false**  (за замовчуванням **1**)
 
+Для отримання результату пошуку, після ініціалізації: `load_jobsBySearch()`
+
+Для отримання лише посилання на сторінку Djinny: `get_searchUrl()`
+
+Для закриття пошукової сессії: `clear_search()`
 .
 
 Пошуковий об'ект мае такі методи для встановлення праметрів:
@@ -80,6 +85,8 @@ $SS->add_english("no_english")->add_english("basic")->add_english("pre");
 $SS->add_specialization("PHP");
 $SS->add_salaryFrom("2500");
 $SS->add_employment("remote");
+
+ print json_encode($DJ->load_jobsBySearch());
 ```
 
 ---
