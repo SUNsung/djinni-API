@@ -2,16 +2,17 @@
 
 namespace djinni;
 
-require_once __DIR__."/reqObj.php";
-require_once __DIR__."/filterObj.php";
-require_once __DIR__."/inboxMsgObj.php";
-require_once __DIR__."/searchObj.php";
-require_once __DIR__."/session.php";
-require_once __DIR__."/search.php";
-require_once __DIR__."/parse.php";
-require_once __DIR__."/net.php";
+require_once "reqObj.php";
+require_once "filterObj.php";
+require_once "inboxMsgObj.php";
+require_once "searchObj.php";
+require_once "session.php";
+require_once "search.php";
+require_once "parse.php";
+require_once "net.php";
 
 class Start extends net{
+    public const ver = "1.0.0";
     protected string $uuid;
     protected string $bufDir;
     
@@ -261,6 +262,7 @@ class Start extends net{
 
         //Формирование обьекта на выдачу
         return (object)[
+            "ver" => $this::ver,
             "uuid" => $this->uuid,
             "buf_dir" => $this->bufDir,
             "user"=> (object)[

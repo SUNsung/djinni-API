@@ -14,42 +14,8 @@
 
 Читання **листів** та **останніх відвідувачів** потребуе авторізаціі. Реалізована авторизація через email+pass.
 
-```php
 
-require_once __DIR__."/bin/autoload.php";
-
-/** @var \djinni\Start $DJ класс djinni */
-$DJ = new \djinni\Start(mail: sysConstants::$user_email, password: sysConstants::$user_pass);
-
-//Вихід з сессіі
-//$DJ->logout();
-
-//Перевірка на авторизацію і авторизація якщо потрібно
-if(!$DJ->is_auth()){
-    $rez = $DJ->auth();
-    if (!$rez) sys::print(code: 401, title: "Unauthorized");
-}
-
-//Встановлення параметрів для пошуку вакансій
-$DJ->start_search(pages: 2)
-    ->add_specialization("PHP")
-    ->add_english("no_english")->add_english("basic")->add_english("pre")
-    ->add_salaryFrom("2500")
-    ->add_employment("remote");
-
-$arr = [
-    "profileView" => $DJ->load_profileView(),           //Список користувачів що дивилися ваш профіль за останній місяць
-    "jobsFilter" => $DJ->load_jobsFilter(),             //Дерево параметрів для пощуку
-    "search" => $DJ->load_jobsBySearch(),               //Список вакансій, котрі знайшлись по заданим параметрам пошуку
-    "archive" => $DJ->load_inbox(is_archive: true),     //Список повідомлень із архіва
-    "inbox" => $DJ->load_inbox()                        //Список активних повідомленнь
-];
-sys::print($arr);
-```
-
-.
-
-.
+---
 
 #### Приклад об'екту повідомлення
 
@@ -75,9 +41,7 @@ sys::print($arr);
 }
 ```
 
-.
-
-.
+---
 
 #### Приклад об'екту вакансії
 
@@ -134,9 +98,9 @@ sys::print($arr);
 }
 ```
 
-.
+---
 
-.
+
 
 #### Приклад об'екту дерева параметрів пошуку
 
@@ -572,4 +536,38 @@ sys::print($arr);
     ]
   }
 }
+```
+
+---
+
+```php
+require_once __DIR__."/bin/autoload.php";
+
+/** @var \djinni\Start $DJ класс djinni */
+$DJ = new \djinni\Start(mail: sysConstants::$user_email, password: sysConstants::$user_pass);
+
+//Вихід з сессіі
+//$DJ->logout();
+
+//Перевірка на авторизацію і авторизація якщо потрібно
+if(!$DJ->is_auth()){
+    $rez = $DJ->auth();
+    if (!$rez) sys::print(code: 401, title: "Unauthorized");
+}
+
+//Встановлення параметрів для пошуку вакансій
+$DJ->start_search(pages: 2)
+    ->add_specialization("PHP")
+    ->add_english("no_english")->add_english("basic")->add_english("pre")
+    ->add_salaryFrom("2500")
+    ->add_employment("remote");
+
+$arr = [
+    "profileView" => $DJ->load_profileView(),           //Список користувачів що дивилися ваш профіль за останній місяць
+    "jobsFilter" => $DJ->load_jobsFilter(),             //Дерево параметрів для пощуку
+    "search" => $DJ->load_jobsBySearch(),               //Список вакансій, котрі знайшлись по заданим параметрам пошуку
+    "archive" => $DJ->load_inbox(is_archive: true),     //Список повідомлень із архіва
+    "inbox" => $DJ->load_inbox()                        //Список активних повідомленнь
+];
+sys::print($arr);
 ```
