@@ -131,7 +131,7 @@ class Start extends net{
     }
     private function is_existsAuth():bool{return isset($_SESSION[$this::session_uuid."auth_time"]);}
     private function time_auth():int{return intval($_SESSION[$this::session_uuid."auth_time"]);}
-    private function uptime_auth():void{$_SESSION[$this::session_uuid."auth_time"] = strtotime("now");}
+    private function uptime_auth():void{if($this->userAuth) $_SESSION[$this::session_uuid."auth_time"] = strtotime("now");}
     private function clear_auth():void{unset($_SESSION[$this::session_uuid."auth_time"]);}
 
     /** Загрузка писем в почтовике */
@@ -181,21 +181,50 @@ class Start extends net{
         if($all_page !== null) $this->search_allPage = $all_page;
         if($this->search_pages < 1) $this->search_pages = 1;
 
-        //Получение страницы заданой пользователем
-        $first_page = $this->search->get_page();
 
         //получение страницы
         $first_page = $this->send_req($this->search->get_url());
         if($first_page->code !== 200) return $ret;
         $this->uptime_auth();
 
-        //Парсинг контента из страницы
-        $parse_arr = $this->parse_search_content($first_page->body);
-        $pages = $this->parse_search_pages($first_page->body);
+        //Обработка загрузки нескольких страниц
+        if($this->search_pages > 1 || $this->search_allPage){
 
-        \sys::print(["pages"=>$pages, "content"=>$parse_arr]);
 
-        return $ret;
+            //Парсинг контента из страницы
+            $parse_arr = $this->parse_search_content($first_page->body);
+
+            //Получение только больших от исходной страниц
+            $page = $this->search->get_page(); $pages = [];
+            foreach ($this->parse_search_pages($first_page->body) as $num) if($page<$num) $pages[] = $num;
+
+            //Получение пределов сколько страниц загружать
+            $max_page = end($pages);
+            if(!$this->search_allPage){
+                if($this->search_pages > 1){
+                    $buf_page = $page+$this->search_pages-1;
+                    if($buf_page < $max_page) $max_page = $buf_page;
+                }
+            }
+
+            //Перебор периода страниц
+            for($pp=$page+1;$pp<=$max_page;$pp++){
+                $this->search->page($pp);
+                $content = $this->send_req($this->search->get_url());
+
+                //Парсинг только спешных
+                if($content->code === 200){
+
+                    //Слияние с уже загруженым
+                    $parse_arr = array_merge($parse_arr, $this->parse_search_content($content->body));
+                }
+            }
+
+            //Возврат польного массива
+            return $parse_arr;
+
+            //ВОзврат массива ондой страницы
+        }else return $this->parse_search_content($first_page->body);
     }
 
     /** Запуск конструктора поисковика */

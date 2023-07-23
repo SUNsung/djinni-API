@@ -16,7 +16,7 @@ if(1) if(!$DJ->is_auth()){
 }
 
 
-$DJ->start_search(all_page: true)
+$DJ->start_search(pages: 2)
     ->add_specialization("PHP")
     ->add_english("no_english")->add_english("basic")->add_english("pre")
     ->add_salaryFrom("1500")
