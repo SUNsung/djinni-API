@@ -1,11 +1,4 @@
 <?php
-/*
- * project: bregus.eu
- * update: 12.07.2023, 07:01
- *
- * autor: SUNsung
- * contact: git@embedded.biz.ua
- */
 
 
 /** Статичный класс с разными методами */
