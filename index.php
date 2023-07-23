@@ -14,6 +14,8 @@ if(0) if(!$DJ->is_auth()){
 
 $TG = new TG_sender(url_api: sysConstants::$tg_url_api);
 $RR = $TG->send_msg(chat_id:sysConstants::$tg_user_id, text: "TEXT");
+
+$RR = json_decode($RR->body);
 sys::print($RR);
 
 $DJ->start_search(pages: 2)

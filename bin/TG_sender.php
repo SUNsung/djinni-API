@@ -2,10 +2,49 @@
 
 class TG_sender{
     protected array $content;
+    protected ?array $inline_button=null;
+    protected ?array $line_button=null;
 
     public function __construct(private string $url_api){}
 
-    public function send_msg(int $chat_id, string $text, array $line_button=[], array $inline_button=[], bool $protect=true, bool $notification=true):object{
+    public function add_button(string $text, int $x=0, int $y=0):void{
+        if($this->line_button === null) $this->line_button = [];
+
+        if($this->line_button[$x] === null) $this->line_button[$x] = [];
+        $this->line_button[$x][$y] = mb_substr($text, 0, 40);;
+    }
+    public function add_inline_urlQuery(string $text, string $url, int $x=0, int $y=0):void{
+
+        if($this->inline_button === null) $this->inline_button = [];
+        if($this->inline_button[$x] === null) $this->inline_button[$x] = [];
+
+        $this->inline_button[$x][$y] = [
+            "text" => mb_substr($text, 0, 40),
+            "url" => mb_substr($url, 0, 256)
+        ];
+    }
+    public function add_inline_switchQuery(string $text, string $share_content, int $x=0, int $y=0):void{
+
+        if($this->inline_button === null) $this->inline_button = [];
+        if($this->inline_button[$x] === null) $this->inline_button[$x] = [];
+
+        $this->inline_button[$x][$y] = [
+            "text" => mb_substr($text, 0, 40),
+            "switch_inline_query" => $share_content
+        ];
+    }
+    public function add_inline_button(string $text, string $callback, int $x=0, int $y=0):void{
+
+        if($this->inline_button === null) $this->inline_button = [];
+        if($this->inline_button[$x] === null) $this->inline_button[$x] = [];
+
+        $this->inline_button[$x][$y] = [
+            "text" => mb_substr($text, 0, 40),
+            "callback_data" => mb_substr($text, 0, 64)
+        ];
+    }
+
+    public function send_msg(int $chat_id, string $text, bool $protect=true, bool $notification=true):object{
         $this->content = [];
 
         $this->content["chat_id"] = $chat_id;
@@ -14,8 +53,8 @@ class TG_sender{
         $this->content["protect"] = $protect;
         $this->content["notification"] = $notification;
 
-        if(count($line_button)>0) $this->content["line_button"] = $line_button;
-        if(count($inline_button)>0) $this->content["inline_button"] = $inline_button;
+        if($this->line_button !== null) $this->content["line_button"] = $this->line_button;
+        if($this->inline_button !== null) $this->content["inline_button"] = $this->inline_button;
 
         return $this->send_req();
     }
