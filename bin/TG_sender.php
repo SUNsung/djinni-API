@@ -6,6 +6,11 @@ class TG_sender{
     protected ?array $line_button=null;
 
     public function __construct(private string $url_api){}
+    public function validate(string $string):string{
+        $a1 = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'];
+        $a2 = ['\_', '\*', '\[', '\]', '\(', '\)', '\~', '\`', '\>', '\#', '\+', '\-', '\=', '\|', '\{', '\}', '\.', '\!'];
+        return str_replace($a1, $a2, $string);
+    }
 
     public function add_button(string $text, int $x=0, int $y=0):void{
         if($this->line_button === null) $this->line_button = [];
@@ -40,7 +45,7 @@ class TG_sender{
 
         $this->inline_button[$x][$y] = [
             "text" => mb_substr($text, 0, 40),
-            "callback_data" => mb_substr($text, 0, 64)
+            "callback_data" => mb_substr($callback, 0, 64)
         ];
     }
 
