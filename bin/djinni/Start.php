@@ -13,6 +13,8 @@ require_once "net.php";
 
 class Start extends net{
     public const ver = "1.0.0";
+    public const sec_pause = 1;
+
     protected string $uuid;
     protected string $bufDir;
     
@@ -210,6 +212,7 @@ class Start extends net{
 
             //Перебор периода страниц
             for($pp=$page+1;$pp<=$max_page;$pp++){
+                sleep($this::sec_pause);
                 $this->search->page($pp);
                 $content = $this->send_req($this->search->get_url());
 
