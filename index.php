@@ -19,6 +19,5 @@ $DJ->start_search(pages: 2)
 $search = $DJ->load_jobsBySearch();
 sys::print($search, "Search");
 
-
 //Финальна заглушка
 sys::print(code: 400, title: "Bad Request [global]", msg: "Rout not catch");

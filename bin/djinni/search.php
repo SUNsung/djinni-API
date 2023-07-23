@@ -25,6 +25,8 @@ class search{
     public function add_specialization(string $param):self{if(mb_strlen($param)>0) $this->specialization[] = $param; return $this;}
     /** Добавання параметра [country] для пошуку */
     public function add_country(string $param):self{if(mb_strlen($param)>0) $this->country[] = $param; return $this;}
+    /** Добавання параметра [city] для пошуку */
+    public function add_city(string $param):self{if(mb_strlen($param)>0) $this->city[] = $param; return $this;}
     /** Добавання параметра [experience] для пошуку */
     public function add_experience(string $param):self{if(mb_strlen($param)>0) $this->experience[] = $param; return $this;}
     /** Добавання параметра [employment] для пошуку */
