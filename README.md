@@ -1,29 +1,38 @@
-# Class for working with djinni.co
-### PHP8.2+ is required to work
-`No third party libraries needed, only php`
+# Класс для роботи з djinni.co
 
-Since the djinni.co resource does not have an API, a class was written to work with the resource from the server, in a developer-friendly format.
+### Потребуе PHP8.2+ для роботи
 
-Login parameters can be set in the .conf.php file or directly in the methods
+`Класс не вимагае ніяких сторонніх бібліотек, лише підключення файлу Start.php`
+
+Так як з'явилася потреба в серверному рішені роботи з сайтом, а djinni.co не мае ніякого API - був написанний данний класс.
+
+Весь функціонал написан тільки і тільки на php. Класс не призначений для массового вивантаження чи для автоматичної россилки резюме.
+
+---
+
+
+
+Отримувати вакансіі, пошук вакансій та завантаження дерева парметрів пошуку не вимагае авторизаціі.
+
+Читання листів та останніх відвідувачів потребуе авторізаціі. Реалізована авторизація через email+pass.
 
 ```php
 
-//Первичный автозагрущик
 require_once __DIR__."/bin/autoload.php";
 
-/** @var \djinni\Start $DJ Обьект класса работы с djinni */
+/** @var \djinni\Start $DJ класс djinni */
 $DJ = new \djinni\Start(mail: sysConstants::$user_email, password: sysConstants::$user_pass);
 
-//Выход из сессии
+//Вихід з сессіі
 //$DJ->logout();
 
-//Проверка авторизации и авторизация если нужно
+//Перевірка на авторизацію і авторизація якщо потрібно
 if(!$DJ->is_auth()){
     $rez = $DJ->auth();
     if (!$rez) sys::print(code: 401, title: "Unauthorized");
 }
 
-//Установка параметров для поиска вакансий
+//Встановлення параметрів для пошуку вакансій
 $DJ->start_search(pages: 2)
     ->add_specialization("PHP")
     ->add_english("no_english")->add_english("basic")->add_english("pre")
@@ -31,11 +40,11 @@ $DJ->start_search(pages: 2)
     ->add_employment("remote");
 
 $arr = [
-    "profileView" => $DJ->load_profileView(),           //Список пользователей что просматривали профиль за последний месяц
-    "jobsFilter" => $DJ->load_jobsFilter(),             //Обьект указателей на поиск
-    "search" => $DJ->load_jobsBySearch(),               //Получение вакансий по поисковым параметрам
-    "archive" => $DJ->load_inbox(is_archive: true),     //получение сообщений из архива
-    "inbox" => $DJ->load_inbox()                        //Получение сообщений из почтового ящика
+    "profileView" => $DJ->load_profileView(),           //Список користувачів що дивилися ваш профіль за останній місяць
+    "jobsFilter" => $DJ->load_jobsFilter(),             //Дерево параметрів для пощуку
+    "search" => $DJ->load_jobsBySearch(),               //Список вакансій, котрі знайшлись по заданим параметрам пошуку
+    "archive" => $DJ->load_inbox(is_archive: true),     //Список повідомлень із архіва
+    "inbox" => $DJ->load_inbox()                        //Список активних повідомленнь
 ];
 sys::print($arr);
 ```
@@ -44,7 +53,8 @@ sys::print($arr);
 
 .
 
-#### Message object example
+#### Приклад об'екту повідомлення
+
 ```json
 {
   "id": 15483452,
@@ -67,11 +77,73 @@ sys::print($arr);
 }
 ```
 
-.
+
 
 .
 
-#### Example of a search options object
+.
+
+#### Приклад об'екту вакансії
+
+```json
+{
+  "id": "63cae7fa02677af17d2424c22818a248463d3e44",
+  "view": 32,
+  "fill": 2,
+  "date": "21 липня",
+  "job": {
+    "name": "PHP Developer",
+    "url": "https://djinni.co/jobs/445813-php-developer/",
+    "salary": "від $2000",
+    "description": [
+      "Обов'язки:",
+      "- Підтримка та доопрацювання функціонування самописної (PHP-фреймоворк Yii1,Yii2) системи;",
+      "- розробка внутрішніх проектів на Yii1, YII2;",
+      "- Інтеграція з різними сервісами за допомогою API;",
+      "- Розробка та підтримка власних API;",
+      "- участь в оптимізації системи;",
+      "Вимоги:",
+      "- Досвід роботи з PHP від 4 років, PHP 5.6 – 7.4;",
+      "- Знання PHP, MySQL, MongoDB, JS/JQuery;",
+      "- досвід оптимізації SQL запитів;",
+      "- досвід роботи з фреймворком Yii1, Yii2;",
+      "- досвід роботи з GIT;",
+      "- Знання Linux (на просунутому рівні)",
+      "- досвід роботи з Amazon AWS (EC2, S3) дуже бажано та інші сервіси;",
+      "- навики базової верстки;",
+      "- вміння підняти власний модуль, вникати в чужий код та доопрацьовувати його;",
+      "- Вміння читати документацію сторонніх сервісів та за необхідності інтегрувати їх.",
+      "- вміння знаходити швидкі та оптимальні рішення, старанність, бажання створювати закінчений продукт, відповідальність, самостійність та дисциплінованість;",
+      "- Вміння розуміти завдання без докладного технічного завдання, у якому необхідно вказувати кожну очевидну деталь."
+    ]
+  },
+  "location": "Україна (Київ)",
+  "tags": [
+    "Product",
+    "Office/Remote на ваш вибір",
+    "5 років досвіду",
+    "Beginner/Elementary"
+  ],
+  "company": {
+    "paramId": "maestro-ticket-system-f960f",
+    "name": "Maestro Ticket System (Kontramarka Україна)",
+    "img": "https://p.djinni.co/a9/d894a16492b5f4086be9fb8f9978be/1519906436128_400.jpg",
+    "url": "https://djinni.co/jobs/?company=maestro-ticket-system-f960f"
+  },
+  "recruiter": {
+    "name": "Александр Порядченко",
+    "type": "CEO",
+    "url": "https://djinni.co/r/10994-ceo-at-maestro-ticket-system/"
+  }
+}
+```
+
+.
+
+.
+
+#### Приклад об'екту дерева параметрів пошуку
+
 ```json
 {
   "specialization": {
