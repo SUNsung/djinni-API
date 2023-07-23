@@ -6,26 +6,24 @@ $DJ = new \djinni\Start(mail: sysConstants::$user_email, password: sysConstants:
 
 if(0)$DJ->logout();
 
-if(0) if(!$DJ->is_auth()){
+if(1) if(!$DJ->is_auth()){
     $rez = $DJ->auth();
     if (!$rez) sys::print(code: 401, title: "Unauthorized");
 }
 
 
-$TG = new TG_sender(url_api: sysConstants::$tg_url_api);
-$RR = $TG->send_msg(chat_id:sysConstants::$tg_user_id, text: "TEXT");
-
-$RR = json_decode($RR->body);
-sys::print($RR);
-
-$DJ->start_search(pages: 2)
-    ->add_specialization("PHP")
-    ->add_english("no_english")->add_english("basic")->add_english("pre")
-    ->add_salaryFrom("2500")
-    ->add_employment("remote");
+$DJ->start_search(pages: 1)
+    ->add_specialization("PHP")->add_salaryFrom("1500")
+    ->excludeKeywords("Wordpress Magento Joomla PrestaShop Symfony Shopware")->fulltext(true)
+    ->add_english("no_english")->add_english("basic")->add_english("pre")->add_english("intermediate")
+    ->add_employment("remote")->add_employment("parttime");
 
 $search = $DJ->load_jobsBySearch();
 sys::print($search, "Search");
+
+
+$TG = new TG_sender(url_api: sysConstants::$tg_url_api);
+$TG->send_msg(chat_id:sysConstants::$tg_user_id, text: "TEXT");
 
 //Финальна заглушка
 sys::print(code: 400, title: "Bad Request [global]", msg: "Rout not catch");
